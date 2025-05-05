@@ -42,7 +42,6 @@ export default function FlipClock(props: FlipClockProps) {
   const targetDate = (mode === 'down' ? to : from)!; // non‑null after guards
 
   // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [state, setState] = React.useState<FlipClockState>(() => constructState());
   const countdownRef = React.useRef(0);
 
   function clearTimer() {
@@ -56,6 +55,8 @@ export default function FlipClock(props: FlipClockProps) {
       completed: mode === 'down' ? timeDelta.total === 0 : false
     };
   }
+
+  const [state, setState] = React.useState<FlipClockState>(() => constructState());
 
   function tick() {
     const newState = constructState();
