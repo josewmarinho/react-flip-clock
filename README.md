@@ -21,8 +21,8 @@ yarn add @seupacote/flip-clock
 ## Uso Básico
 
 ```tsx
-import FlipClock from '@seupacote/flip-clock';
-import '@seupacote/flip-clock/dist/index.css';
+import FlipClock from '@josewmarinho/flip-clock';
+import '@josewmarinho/flip-clock/dist/index.css';
 
 const App = () => (
   <FlipClock
