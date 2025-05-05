@@ -45,7 +45,7 @@ export interface FlipClockProps extends React.DetailedHTMLProps<React.HTMLAttrib
   /**
    * @deprecated
    * Props to be passed to div element that is container for all elements.
-   * You can use this if you want to style or select the whole container.
+   * You can use this if you want to style or select the whole container
    */
   readonly containerProps?: React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement>;
   /**
