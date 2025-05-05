@@ -3,7 +3,7 @@
 > ⏰ Um componente React com animação 3D para contagem regressiva (**countdown**) e contagem progressiva (**countup**).
 
 <div align="center">
-  <img src="./resources/demo.gif" alt="flip clock demo" width="500" />
+  <img src="./resources/newflipclock.gif" alt="flip clock demo" width="500" />
 </div>
 
 ## Instalação
