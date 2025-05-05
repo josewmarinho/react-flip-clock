@@ -1,3 +1,3 @@
-import FlipClockCountdown from './FlipClockCountDown';
+import FlipClock from './FlipClock';
 export * from './types';
-export default FlipClockCountdown;
+export default FlipClock;

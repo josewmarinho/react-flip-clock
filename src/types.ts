@@ -2,37 +2,41 @@ import React from 'react';
 
 export type Digit = number | string;
 
-export interface FlipClockCountdownUnitTimeFormatted {
+export interface FlipClockUnitTimeFormatted {
   readonly current: Digit[];
   readonly next: Digit[];
 }
 
-export interface FlipClockCountdownTimeDeltaFormatted {
-  readonly days: FlipClockCountdownUnitTimeFormatted;
-  readonly hours: FlipClockCountdownUnitTimeFormatted;
-  readonly minutes: FlipClockCountdownUnitTimeFormatted;
-  readonly seconds: FlipClockCountdownUnitTimeFormatted;
+export interface FlipClockTimeDeltaFormatted {
+  readonly years: FlipClockUnitTimeFormatted;
+  readonly months: FlipClockUnitTimeFormatted;
+  readonly days: FlipClockUnitTimeFormatted;
+  readonly hours: FlipClockUnitTimeFormatted;
+  readonly minutes: FlipClockUnitTimeFormatted;
+  readonly seconds: FlipClockUnitTimeFormatted;
 }
 
-export interface FlipClockCountdownTimeDelta {
+export interface FlipClockTimeDelta {
   readonly total: number;
+  readonly years: number;
+  readonly months: number;
   readonly days: number;
   readonly hours: number;
   readonly minutes: number;
   readonly seconds: number;
 }
 
-export interface FlipClockCountdownState {
-  readonly timeDelta: FlipClockCountdownTimeDelta;
+export interface FlipClockState {
+  readonly timeDelta: FlipClockTimeDelta;
   readonly completed: boolean;
 }
 
-export type FlipClockCountdownTimeDeltaFn = (props: FlipClockCountdownState) => void;
+export type FlipClockTimeDeltaFn = (props: FlipClockState) => void;
 
-export interface FlipClockCountdownProps
-  extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
-  readonly to: Date | number | string;
-
+export interface FlipClockProps extends React.DetailedHTMLProps<React.HTMLAttributes<HTMLDivElement>, HTMLDivElement> {
+  to?: Date | number | string;
+  from?: Date | number | string;
+  mode?: 'down' | 'up';
   /**
    * By default, the countdown will be hidden when it completed (or show children if provided).
    * This will keep the timer in place and stuck at zeros when the countdown is completed.
@@ -54,7 +58,7 @@ export interface FlipClockCountdownProps
    * @param timeDelta
    * @param completed represents the state of the countdown. `true` if the countdown ended, otherwise `false`.
    */
-  readonly onTick?: FlipClockCountdownTimeDeltaFn;
+  readonly onTick?: FlipClockTimeDeltaFn;
   /**
    * Each element represents the render state of each section (day, hour, minute, second).
    *

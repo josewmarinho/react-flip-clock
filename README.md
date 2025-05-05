@@ -1,209 +1,79 @@
-# react-flip-clock-countdown
+# FlipClock
 
-> A 3D animated countdown component for React.
-
-[![NPM](https://img.shields.io/npm/v/@leenguyen/react-flip-clock-countdown.svg)](https://www.npmjs.com/package/@leenguyen/react-flip-clock-countdown) [![JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](https://standardjs.com)
+> ⏰ Um componente React com animação 3D para contagem regressiva (**countdown**) e contagem progressiva (**countup**).
 
 <div align="center">
-  <img src="./resources/demo.gif" alt="react flip clock countdown demo" width="500" />
+  <img src="./resources/demo.gif" alt="flip clock demo" width="500" />
 </div>
 
-## Install
+## Instalação
 
 ```bash
-npm install --save @leenguyen/react-flip-clock-countdown
+npm install --save @seupacote/flip-clock
 ```
 
-Or
+ou
 
 ```bash
-yarn add @leenguyen/react-flip-clock-countdown
+yarn add @seupacote/flip-clock
 ```
 
-## Props
-
-The <code>FlipClockCountdown</code> has all properties of `div` and additional props below
-
-| Name                       |                   Type                    | Required |                       Default                        | Description                                                                                                                                                                      |
-| :------------------------- | :---------------------------------------: | :------: | :--------------------------------------------------: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **to**                     | <code>Date&#124;string&#124;number</code> |   yes    |                                                      | <code>Date</code> or timestamp in the future.                                                                                                                                    |
-| ~~**containerProps**~~     |            <code>object</code>            |    no    |                <code>undefined</code>                | Props apply to the flip clock container. This prop is deprecated, you should apply directly to the <code>FlipClockCountdown</code> component.                                    |
-| **onComplete**             |             <code>func</code>             |    no    |                                                      | Callback when countdown ends<br/> **Signature**:<br/>`function() => void`                                                                                                        |
-| **onTick**                 |             <code>func</code>             |    no    |                                                      | Callback on every interval tick<br /> **Signature**:<br/>`function({ timeDelta, completed }) => void`                                                                            |
-| **renderMap**              |       <code>`Array<boolean>`</code>       |    no    |        <code>[true, true, true, true]</code>         | Each element represents the render state of each section (day, hour, minute, second). If `true` section will be rendered, `false` otherwise.                                     |
-| **labels**                 |       <code>`Array<string>`</code>        |    no    | <code>['Days', 'Hours', 'Minutes', 'Seconds']</code> | Custom array of labels used to represent information for each section (day, hour, minute, second).                                                                               |
-| **showLabels**             |           <code>boolean</code>            |    no    |                  <code>true</code>                   | Set it to `false` if you don't want to show the labels.                                                                                                                          |
-| **showSeparators**         |           <code>boolean</code>            |    no    |                  <code>true</code>                   | Set it to `false` if you don't want to show the separators (colon) between time unit.                                                                                            |
-| **labelStyle**             |     <code>React.CSSProperties</code>      |    no    |                <code>undefined</code>                | The styles apply to labels `font-size`, `color`, `width`, `height`, etc.                                                                                                         |
-| **digitBlockStyle**        |     <code>React.CSSProperties</code>      |    no    |                <code>undefined</code>                | The styles apply to digit blocks like `font-size`, `color`, `width`, `height`, etc.                                                                                              |
-| **separatorStyle**         |            <code>object</code>            |    no    |                <code>undefined</code>                | The styles apply to separator (colon), includes `size` and `color`.                                                                                                              |
-| **dividerStyle**           |            <code>object</code>            |    no    |                <code>undefined</code>                | The style will be applied to divider, includes `color` and `height`.                                                                                                             |
-| **spacing**                |            <code>object</code>            |    no    |                <code>undefined</code>                | This prop allows you to modify the clock spacing.                                                                                                                                |
-| **duration**               |            <code>number</code>            |    no    |                   <code>0.7</code>                   | Duration (in second) when flip card. Valid value in range (0, 1).                                                                                                                |
-| **hideOnComplete**         |           <code>boolean</code>            |    no    |                  <code>true</code>                   | By default, the countdown will be hidden when it completed (or show children if provided). This will keep the timer in place and stuck at zeros when the countdown is completed. |
-| **stopOnHiddenVisibility** |           <code>boolean</code>            |    no    |                  <code>false</code>                  | Whether or not to stop the clock when the visibilityState is hidden, enabling this feature will prevent the component gets derailed if we switch between browser tabs.           |
-| **renderOnServer**         |           <code>boolean</code>            |    no    |                  <code>false</code>                  | Whether or not to render the clock on server.                                                                                                                                    |
-
-## Usage
-
-### Basic usage
+## Uso Básico
 
 ```tsx
-import React, { Component } from 'react';
+import FlipClock from '@seupacote/flip-clock';
+import '@seupacote/flip-clock/dist/index.css';
 
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
-import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-
-class Example extends Component {
-  render() {
-    return <FlipClockCountdown to={new Date().getTime() + 24 * 3600 * 1000 + 5000} />;
-  }
-}
+const App = () => (
+  <FlipClock
+    mode='up'
+    from={new Date(2022, 4, 2, 23, 0, 0)}
+    labels={['Anos', 'Meses', 'Dias', 'Horas', 'Minutos', 'Segundos']}
+    digitBlockStyle={{
+      width: 45,
+      height: 65,
+      fontSize: 32,
+      borderRadius: 6,
+      backgroundColor: '#ff007f',
+      color: '#000000'
+    }}
+    dividerStyle={{ color: '#c2c2c2', height: 1 }}
+    spacing={{ clock: 10, digitBlock: 4 }}
+  >
+    Tempo encerrado
+  </FlipClock>
+);
 ```
 
-### Render a React Component when countdown is complete
+## Principais Propriedades
 
-In case you want to change the output of the component, or want to signal that the countdown's work is done, you can do this by either using the onComplete callback or by specifying a React child within `<FlipClockCountdown></FlipClockCountdown>`, which will only be shown once the countdown is complete.
+| Propriedade       | Tipo                                      | Descrição                                                        |
+| ----------------- | ----------------------------------------- | ---------------------------------------------------------------- |
+| `mode`            | `"up"` \| `"down"`                        | Define se a contagem será progressiva ou regressiva.             |
+| `from` / `to`     | `Date` \| `string` \| `number`            | Data inicial (`from`) ou final (`to`) da contagem.               |
+| `labels`          | `string[]`                                | Rótulos exibidos nos dígitos (ex: `['Dias', 'Horas', ...]`).     |
+| `digitBlockStyle` | `React.CSSProperties`                     | Estilo dos blocos de dígitos (largura, altura, cor, fonte, etc). |
+| `dividerStyle`    | `{ color?: string; height?: any }`        | Estilo da linha divisória entre os dígitos.                      |
+| `spacing`         | `{ clock?: number; digitBlock?: number }` | Espaçamento entre elementos.                                     |
+| `duration`        | `number`                                  | Duração da animação do flip (ex: `0.7`).                         |
+| `children`        | `ReactNode`                               | Conteúdo a ser renderizado quando a contagem termina.            |
 
-```tsx
-import React, { Component } from 'react';
+## Estilização via CSS
 
-import FlipClockCountdown from '@leenguyen/react-flip-clock-countdown';
-import '@leenguyen/react-flip-clock-countdown/dist/index.css';
-
-class Completed extends Component {
-  render() {
-    return <span>The countdown is complete</span>
-  }
-}
-
-class RenderByUsingReactChild extends Component {
-  render() {
-    return (
-      <FlipClockCountdown to={new Date().getTime() + 24 * 3600 * 1000 + 5000}>
-        <Completed />
-      </FlipClockCountdown>;
-    )
-  }
-}
-
-class RenderByUsingCallback extends Component {
-  constructor(props) {
-    super(props);
-
-    this.endTime = new Date().getTime() + 24 * 3600 * 1000 + 5000;
-    this.state = {
-      isCompleted: false
-    }
-
-    this.handleComplete = this.handleComplete.bind(this);
-  }
-
-  handleComplete() {
-    this.setState({ isCompleted: true });
-  }
-
-  render() {
-    return (
-      <React.Fragment>
-        {isCompleted && <Completed />}
-        <FlipClockCountdown onComplete={this.handleComplete} to={this.endTime} />
-      </React.Fragment>
-    )
-  }
-}
-```
-
-### Render a custom countdown
-
-#### Custom styles
-
-```tsx
-class Example extends Component {
-  render() {
-    return (
-      <FlipClockCountdown
-        to={new Date().getTime() + 24 * 3600 * 1000 + 5000}
-        labels={['DAYS', 'HOURS', 'MINUTES', 'SECONDS']}
-        labelStyle={{ fontSize: 10, fontWeight: 500, textTransform: 'uppercase' }}
-        digitBlockStyle={{ width: 40, height: 60, fontSize: 30 }}
-        dividerStyle={{ color: 'white', height: 1 }}
-        separatorStyle={{ color: 'red', size: '6px' }}
-        duration={0.5}
-      >
-        Finished
-      </FlipClockCountdown>
-    );
-  }
-}
-```
-
-#### Custom styles via css
-
-```tsx
-import 'styles.css';
-
-class Example extends Component {
-  render() {
-    return <FlipClockCountdown to={new Date().getTime() + 24 * 3600 * 1000 + 5000} className='flip-clock' />;
-  }
-}
-```
+Você também pode personalizar o estilo globalmente usando variáveis CSS:
 
 ```css
-/* styles.css */
-
 .flip-clock {
-  --fcc-flip-duration: 0.5s; /* transition duration when flip card */
-  --fcc-spacing: 8px; /* space between unit times and separators */
-  --fcc-digit-block-width: 40px; /* width of digit card */
-  --fcc-digit-block-height: 60px; /* height of digit card, highly recommend in even number */
-  --fcc-digit-block-radius: 5px; /* border radius of digit card */
-  --fcc-digit-block-spacing: 5px; /* space between blocks in each unit of time */
-  --fcc-digit-font-size: 30px; /* font size of digit */
-  --fcc-digit-color: white; /* color of digit */
-  --fcc-label-font-size: 10px; /* font size of label */
-  --fcc-label-color: #ffffff; /* color of label */
-  --fcc-background: black; /* background of digit card */
-  --fcc-divider-color: white; /* color of divider */
-  --fcc-divider-height: 1px; /* height of divider */
-  --fcc-separator-size: 6px; /* size of colon */
-  --fcc-separator-color: red; /* color of colon */
+  --fcc-background: black;
+  --fcc-digit-color: white;
+  --fcc-label-color: #ccc;
+  --fcc-flip-duration: 0.6s;
+  --fcc-digit-block-width: 45px;
+  --fcc-digit-block-height: 65px;
+  --fcc-digit-font-size: 32px;
 }
 ```
 
-#### Custom section to be rendered
+## Licença
 
-In case you don't want to display the date, use `renderMap` to custom render state of each section
-
-```tsx
-class Example extends Component {
-  render() {
-    return (
-      <FlipClockCountdown to={new Date().getTime() + 24 * 3600 * 1000 + 5000} renderMap={[false, true, true, true]}>
-        Finished
-      </FlipClockCountdown>
-    );
-  }
-}
-```
-
-## Contributing
-
-The package is made up of 2 main folders:
-
-- <code>/src</code> contains the FlipClockCountdown
-- <code>/examples</code> contains the create-react-app and create-next-app based demo website
-
-To setup and run a local copy:
-
-1. Clone this repo with `https://github.com/sLeeNguyen/react-flip-clock-countdown`
-2. Run `npm install` in the **root** folder
-3. Run `npm install` in the **examples/react-app** folder
-4. In separate terminal windows, run `npm start` in the **root** and **examples/react-app** folders.
-
-When you're done working on your changes, feel free to send PRs with the details and include a screenshot if you've changed anything visually.
-
-## License
-
-MIT © [leenguyen](https://github.com/sLeenguyen)
+MIT © [josewmarinho](https://github.com/josewmarinho)

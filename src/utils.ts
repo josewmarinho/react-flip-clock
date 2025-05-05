@@ -1,68 +1,101 @@
-import { Digit, FlipClockCountdownTimeDelta, FlipClockCountdownTimeDeltaFormatted } from './types';
+import { Digit, FlipClockTimeDelta, FlipClockTimeDeltaFormatted } from './types';
 
-export const defaultTimeDelta = {
+const alignToSecond = (ms: number) => Math.floor(ms / 1000) * 1000;
+
+export const defaultTimeDelta: FlipClockTimeDelta = {
   total: 0,
+  years: 0,
+  months: 0,
   days: 0,
   hours: 0,
   minutes: 0,
   seconds: 0
 };
 
-export function calcTimeDelta(target: Date | number | string): FlipClockCountdownTimeDelta {
-  const date = new Date(target);
-  if (isNaN(date.getTime())) {
-    throw Error('Invalid date');
+export const pad = (n: number): Digit[] =>
+  ('0'.repeat(Math.max(0, 2 - String(n).length)) + String(Math.abs(n))).slice(-2).split('');
+
+export function calcTimeDelta(
+  mode: 'down' | 'up',
+  reference: Date | number | string,
+  nowMs: number
+): FlipClockTimeDelta {
+  const ref = new Date(reference);
+  if (isNaN(ref.getTime())) throw Error('Invalid date');
+  const now = new Date(nowMs);
+
+  /* ---------- COUNTDOWN ---------- */
+  if (mode === 'down') {
+    let diff = Math.floor((ref.getTime() - now.getTime()) / 1000);
+    if (diff < 0) diff = 0;
+    return {
+      total: diff,
+      years: 0,
+      months: 0,
+      days: Math.floor(diff / 86_400),
+      hours: Math.floor((diff / 3_600) % 24),
+      minutes: Math.floor((diff / 60) % 60),
+      seconds: diff % 60
+    };
   }
-  const now = Date.now();
-  let timeLeft = Math.round((date.getTime() - now) / 1000); // convert to seconds
-  if (timeLeft < 0) timeLeft = 0;
+
+  /* ---------- COUNT‑UP ------------ */
+  let total = Math.floor((now.getTime() - ref.getTime()) / 1000);
+  if (total < 0) total = 0;
+
+  let years = now.getFullYear() - ref.getFullYear();
+  let months = now.getMonth() - ref.getMonth();
+  let days = now.getDate() - ref.getDate();
+  if (days < 0) {
+    const prev = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prev.getDate();
+    months -= 1;
+  }
+  if (months < 0) {
+    months += 12;
+    years -= 1;
+  }
+
+  let hours = now.getHours() - ref.getHours();
+  let minutes = now.getMinutes() - ref.getMinutes();
+  let seconds = now.getSeconds() - ref.getSeconds();
+
+  const norm = (n: number, base: number): [number, number] => (n >= 0 ? [n, 0] : [n + base, -1]);
+  let carry;
+  [seconds, carry] = norm(seconds, 60);
+  [minutes, carry] = norm(minutes + carry, 60);
+  [hours, carry] = norm(hours + carry, 24);
+  days += carry;
+
+  if (days < 0) {
+    const prev = new Date(now.getFullYear(), now.getMonth(), 0);
+    days += prev.getDate();
+    months -= 1;
+  }
+  if (months < 0) {
+    months += 12;
+    years -= 1;
+  }
+
+  return { total, years, months, days, hours, minutes, seconds };
+}
+
+export function buildFormatted(mode: 'down' | 'up', origin: Date | number | string): FlipClockTimeDeltaFormatted {
+  const base = alignToSecond(Date.now());
+  const cur = calcTimeDelta(mode, origin, base);
+  const nxt = calcTimeDelta(mode, origin, base + 1000);
 
   return {
-    total: timeLeft,
-    days: Math.floor(timeLeft / (24 * 60 * 60)),
-    hours: Math.floor((timeLeft / 3600) % 24),
-    minutes: Math.floor((timeLeft / 60) % 60),
-    seconds: Math.floor(timeLeft % 60)
+    years: { current: pad(cur.years % 100), next: pad(nxt.years % 100) },
+    months: { current: pad(cur.months), next: pad(nxt.months) },
+    days: { current: pad(cur.days), next: pad(nxt.days) },
+    hours: { current: pad(cur.hours), next: pad(nxt.hours) },
+    minutes: { current: pad(cur.minutes), next: pad(nxt.minutes) },
+    seconds: { current: pad(cur.seconds), next: pad(nxt.seconds) }
   };
 }
 
-export function pad(n: number): Digit[] {
-  return ('0'.repeat(Math.max(0, 2 - String(n).length)) + String(n)).split('');
-}
+export const convertToPx = (n?: string | number) => (n == null ? undefined : typeof n === 'string' ? n : `${n}px`);
 
-export function parseTimeDelta(timeDelta: FlipClockCountdownTimeDelta): FlipClockCountdownTimeDeltaFormatted {
-  const nextTimeDelta = calcTimeDelta(new Date().getTime() + (timeDelta.total - 1) * 1000);
-
-  return {
-    days: {
-      current: pad(timeDelta.days),
-      next: pad(nextTimeDelta.days)
-    },
-    hours: {
-      current: pad(timeDelta.hours),
-      next: pad(nextTimeDelta.hours)
-    },
-    minutes: {
-      current: pad(timeDelta.minutes),
-      next: pad(nextTimeDelta.minutes)
-    },
-    seconds: {
-      current: pad(timeDelta.seconds),
-      next: pad(nextTimeDelta.seconds)
-    }
-  };
-}
-
-export function convertToPx(n?: string | number): string | undefined {
-  if (n === undefined) return undefined;
-  if (typeof n === 'string') return n;
-  return `${n}px`;
-}
-
-export function isServer() {
-  return typeof window === 'undefined';
-}
-
-export function isClient() {
-  return !isServer();
-}
+export const isServer = () => typeof window === 'undefined';
+export const isClient = () => !isServer();
