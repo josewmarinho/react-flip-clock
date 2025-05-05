@@ -1,10 +1,17 @@
 {
-  "name": "@josewmarinho/flip-clock",
+  "name": "@josewmarinho/react-flip-clock",
   "version": "1.0.0",
   "description": "Relógio flip animado com countdown e countup para React",
   "author": "josewmarinho",
   "license": "MIT",
-  "repository": "https://github.com/josewmarinho/flip-clock.git",
+  "repository": {
+  "type": "git",
+  "url": "https://github.com/josewmarinho/react-flip-clock.git"
+},
+"bugs": {
+  "url": "https://github.com/josewmarinho/react-flip-clock/issues"
+},
+"homepage": "https://github.com/josewmarinho/react-flip-clock#readme",
   "main": "dist/index.js",
   "module": "dist/index.modern.js",
   "types": "dist/index.d.ts",
