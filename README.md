@@ -9,13 +9,13 @@
 ## Instalação
 
 ```bash
-npm install --save @josewmarinho/flip-clock
+npm install --save @josewmarinho/react-flip-clock
 ```
 
 ou
 
 ```bash
-yarn add @josewmarinho/flip-clock
+yarn add @josewmarinho/react-flip-clock
 ```
 
 ## Uso Básico
