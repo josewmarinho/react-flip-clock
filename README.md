@@ -9,13 +9,13 @@
 ## Instalação
 
 ```bash
-npm install --save @seupacote/flip-clock
+npm install --save @josewmarinho/flip-clock
 ```
 
 ou
 
 ```bash
-yarn add @seupacote/flip-clock
+yarn add @josewmarinho/flip-clock
 ```
 
 ## Uso Básico
